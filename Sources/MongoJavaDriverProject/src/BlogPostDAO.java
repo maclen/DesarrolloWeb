@@ -6,6 +6,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
 
@@ -43,8 +44,14 @@ public class BlogPostDAO {
 	}
 	
 	//incompleto
-	public void updatePostComments(){
-		
+	public void updatePostComments (String postId, 
+			String commentId) throws UnknownHostException{
+		DBCollection postCollection = getDB().getCollection("posts");
+		DBRef commentRef = new DBRef(getDB(), "comments", commentId);
+		BasicDBObject toUpdate = new BasicDBObject("_id",postId);
+		BasicDBObject update = new BasicDBObject("comments",commentRef);
+	
+		postCollection.update(toUpdate,new BasicDBObject("$set",update));
 	}
 	
 }

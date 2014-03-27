@@ -1,17 +1,19 @@
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.UnknownHostException;
 import java.util.Date;
 
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 
@@ -42,7 +44,7 @@ public class BlogPostDAOTest {
 		post.setId("postdaotestid");
 		post.setBody("Post content");
 		post.setOwner("emakeda@gmail.com");
-		post.setPostedDate(new Date());
+		post.setPostedDate(new Date()); 
 		post.setComments(null);
 	}
 	
@@ -64,6 +66,28 @@ public class BlogPostDAOTest {
 		postDao.deletePostById("postdaotestid");
 		assertNull("The post shouldn't exist in the posts collection",
 				postsCollection.findOne(postDBObject));
+		
+	}
+	
+	@Test
+	public void updatePostCommentsTest() 
+			throws UnknownHostException {
+		//Insertar un post
+		postDao.insertPost(post);
+		//Llamada al metodo a probar
+		postDao.updatePostComments(post.getId(),"commentId");
+		//Agregar condiciones para que pase la prueba
+		DBObject found = postsCollection.findOne(postDBObject);
+		assertNotNull("El campo de comentario debe estar actualizado",
+				found.get("comments"));
+		assertNotNull("El metodo update solo debe actualizar los comentarios",
+				found.get("body"));
+		
+		BasicDBList comments = 
+				(BasicDBList)found.get("comments");
+		
+		assertTrue("El campo comments debe "
+				+ "de tener mas de un valor", comments.size()>1);
 	}
 
 }

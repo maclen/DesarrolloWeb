@@ -3,7 +3,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +16,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
 
@@ -45,7 +48,10 @@ public class BlogPostDAOTest {
 		post.setBody("Post content");
 		post.setOwner("emakeda@gmail.com");
 		post.setPostedDate(new Date()); 
-		post.setComments(null);
+		DBRef commentRef = new DBRef(blogDB, "comments","id");
+		List<DBRef> commentsList = new ArrayList<DBRef>();
+		commentsList.add(commentRef);
+		post.setComments(commentsList);
 	}
 	
 	@After

@@ -27,9 +27,7 @@ public class BlogPostDAO {
 		toInsert.append("body", post.getBody());
 		toInsert.append("owner", post.getOwner());
 		toInsert.append("postedDate", post.getPostedDate());
-		
-		// TODO make the implementation for comments POJO
-//		toInsert.append("comments", post.getComments());
+		toInsert.append("comments", post.getComments());
 		postCollection.insert(toInsert);
 	}
 	
@@ -51,7 +49,7 @@ public class BlogPostDAO {
 		BasicDBObject toUpdate = new BasicDBObject("_id",postId);
 		BasicDBObject update = new BasicDBObject("comments",commentRef);
 	
-		postCollection.update(toUpdate,new BasicDBObject("$set",update));
+		postCollection.update(toUpdate,new BasicDBObject("$push",update));
 	}
 	
 }

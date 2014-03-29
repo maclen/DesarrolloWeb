@@ -1,5 +1,5 @@
 
-public class commentsDAO {
+public class CommentsDAO {
 	
 	public Comment buscarComentarioPorId(String id){
 		return null;
@@ -14,7 +14,7 @@ public class commentsDAO {
 	}
 	
 	//Solo debe actualizar el body del comentario
-	public void editarComentario(String id){
+	public void editarComentario(String id, String body){
 		
 	}
 

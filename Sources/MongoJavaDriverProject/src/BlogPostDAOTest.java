@@ -23,7 +23,7 @@ import com.mongodb.MongoClient;
 public class BlogPostDAOTest {
 
 	//Clase a probar
-	private BlogPostDAO postDao = new BlogPostDAO();
+	private IBlogPostDAO postDao = new BlogPostDAO();
 
 	//Business Objects
 	private Post post;

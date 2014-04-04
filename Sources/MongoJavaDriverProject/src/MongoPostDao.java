@@ -1,6 +1,6 @@
 import java.net.UnknownHostException;
-
-import org.bson.types.ObjectId;
+import java.util.Date;
+import java.util.List;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -10,7 +10,7 @@ import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
 
-public class BlogPostDAO implements IBlogPostDAO {
+public class MongoPostDao implements IPostDao {
 
 	//CRUD Create, retrieve, update, delete
 
@@ -52,8 +52,23 @@ public class BlogPostDAO implements IBlogPostDAO {
 	/* (non-Javadoc)
 	 * @see IBlogPostDAO#findPostById(org.bson.types.ObjectId)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public DBObject findPostById(ObjectId postId){
+	public Post findPostById(String postId) throws UnknownHostException{
+		DBCollection postsCollection = getDB().getCollection("posts");
+		try {
+			Post post = new Post();
+			postsCollection = getDB().getCollection("posts");
+			DBObject found = postsCollection.findOne(new BasicDBObject("_id", postId));
+			post.setId((String)found.get("_id"));
+			post.setOwner((String)found.get("owner"));
+			post.setPostedDate((Date)found.get("postedDate"));
+			post.setBody((String)found.get("body"));
+			post.setComments((List<DBRef>)found.get("comments"));
+			return post;
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	

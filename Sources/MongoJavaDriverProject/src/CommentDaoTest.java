@@ -1,5 +1,6 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,14 +11,14 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 
-public class CommentsDAOTest {
+public class CommentDaoTest {
 
 	//mongo
 	private MongoConnection mongo = new MongoConnection("blogDB");
 	private DBCollection commentsCollection;
 	
 	//Clase a probar
-	private CommentsDAO commentsDao = new CommentsDAO();
+	private ICommentDao commentsDao = new MongoCommentDao();
 	
 	//BO
 	private BasicDBObject comment;
@@ -47,8 +48,28 @@ public class CommentsDAOTest {
 	}
 	
 	@Test
+	public void borrarComentario(){
+		commentsDao.borrarComentario("commenttest");
+		assertNull("se encontro el comentario ;D", 
+				commentsCollection.findOne(new BasicDBObject("_id", "commenttest")));
+	}
+	
+	@Test
 	public void insertarComentario() {
-		commentsDao.insertarComentario(null);
+		Comment toInsert = new Comment();
+		toInsert.setId("commenttest");
+		toInsert.setAuthor("someting xD");
+		toInsert.setDate(new Date());
+		toInsert.setBody("Holo");
+		
+		commentsCollection.remove(new BasicDBObject("_id","commenttest"));
+		commentsDao.insertarComentario(toInsert);
+		
+		DBObject found = commentsCollection.findOne(new BasicDBObject("_id","commenttest"));
+		
+		assertNotNull("El comentario debe existir",found);
+		assertEquals("El comentario debe ser el correcto y el id debe ser igual a commenttest", "commenttest", found.get("_id"));
+		assertEquals("El autor del coment debe ser someting xD", "someting xD", found.get("author"));
 	}
 	
 	@Test

@@ -1,11 +1,8 @@
 import java.net.UnknownHostException;
 
-import org.bson.types.ObjectId;
-
 import com.mongodb.DB;
-import com.mongodb.DBObject;
 
-public interface IBlogPostDAO {
+public interface IPostDao {
 
 	public abstract DB getDB() throws UnknownHostException;
 
@@ -14,7 +11,7 @@ public interface IBlogPostDAO {
 	public abstract void deletePostById(String postId)
 			throws UnknownHostException;
 
-	public abstract DBObject findPostById(ObjectId postId);
+	public abstract Post findPostById(String postId) throws UnknownHostException;
 
 	//incompleto
 	public abstract void updatePostComments(String postId, String commentId)
